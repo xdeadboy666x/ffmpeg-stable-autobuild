@@ -38,7 +38,7 @@ jobs:
           echo git-sha=$git_sha >> $GITHUB_OUTPUT
           echo git-sha-short=${git_sha::7} >> $GITHUB_OUTPUT
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           
       - name: Get ffmpeg-stable-autobuild latest build
         id: ffmpeg-autobuild-info
@@ -47,7 +47,7 @@ jobs:
           echo version=${tag_name:25} >> $GITHUB_OUTPUT
           echo helper-git-sha=${tag_name:17:7} >> $GITHUB_OUTPUT
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           
       - name: Check if there is newer version or commit
         if: '! inputs.force_build'
@@ -176,5 +176,5 @@ jobs:
           Using ${{ needs.check.outputs.helper-git-owner }}/ffmpeg-windows-build-helpers git-${{ needs.check.outputs.helper-git-sha }}" \
           -t "${{ needs.check.outputs.version }} ${{ needs.build.outputs.date-time-after }} ${{ needs.check.outputs.helper-git-sha-short }}"
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_REPO: ${{ github.repository }}
