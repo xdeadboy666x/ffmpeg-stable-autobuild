@@ -83,6 +83,11 @@ jobs:
           ref: ${{ needs.check.outputs.helper-git-sha }}
           persist-credentials: false
           
+      - uses: actions/checkout@v4
+      - name: Read package list
+        id: read-packages
+        run: echo "PACKAGES=$(tr '\n' ' ' < apt-packages.txt)" >> $GITHUB_ENV
+      
       - run: sudo dpkg --add-architecture i386
       - name: Cache APT packages
         uses: awalsh128/cache-apt-pkgs-action@latest
