@@ -41,20 +41,20 @@ jobs:
           GH_TOKEN: ${{ secrets.TOKEN_REPO }}
           
       - name: Get ffmpeg-stable-autobuild latest build
-        id: ffmpeg-autobuild-info
+        id: ffmpeg-stable-autobuild-info
         run: |
           tag_name=$(gh api repos/$GITHUB_REPOSITORY/releases/latest -q .tag_name)
-          echo version=${tag_name:25} >> $GITHUB_OUTPUT
-          echo helper-git-sha=${tag_name:17:7} >> $GITHUB_OUTPUT
+          echo git-sha=${tag_name:17:7} >> $GITHUB_OUTPUT
+          echo helper-git-sha=${tag_name:25:7} >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.TOKEN_REPO }}
-          
-      - name: Check if there is newer version or commit
+
+      - name: Check if there is newer commit
         if: '! inputs.force_build'
         run: >
-          [[ "${{ steps.ffmpeg-info.outputs.version }}" != "${{ steps.ffmpeg-autobuild-info.outputs.version }}" ]] ||
+          [[ "${{ steps.ffmpeg-info.outputs.git-sha-short }}" != "${{ steps.ffmpeg-autobuild-info.outputs.git-sha }}" ]] ||
           [[ "${{ steps.ffmpeg-helper-info.outputs.git-sha-short }}" != "${{ steps.ffmpeg-autobuild-info.outputs.helper-git-sha }}" ]]
-          
+
     outputs:
       version: ${{ steps.ffmpeg-info.outputs.version }}
       helper-git-owner: ${{ steps.ffmpeg-helper-info.outputs.git-owner }}
